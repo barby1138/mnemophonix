@@ -300,7 +300,7 @@ int new_wav_reader(const char* wav, struct wav_reader* *reader) {
 
 
 void free_wav_reader(struct wav_reader* reader) {
-    fclose(reader->f);
+    if (reader->f != NULL) { fclose(reader->f); }
     free(reader->artist);
     free(reader->track_title);
     free(reader->album_title);

@@ -44,7 +44,10 @@ char* generate_wave_file(char* input, char* *artist, char* *track_title, char* *
 
     int pid;
     switch(pid = fork()) {
-        case -1: return NULL;
+        case -1: {
+            perror("fork() failed");
+            return NULL;
+        }
         case 0: {
             // Child process
             execlp("ffmpeg", "ffmpeg", "-i", input, "-acodec", "pcm_s16le", "-ar", "44100", "-f", "wav", wav, "-f", "ffmetadata", metadata, NULL);
@@ -55,6 +58,7 @@ char* generate_wave_file(char* input, char* *artist, char* *track_title, char* *
             int status;
             waitpid(pid, &status, 0);
             if (!WIFEXITED(status) || 0 != WEXITSTATUS(status)) {
+                perror("ffmpeg child process failed");
                 return NULL;
             }
             parse_metadata(metadata, artist, track_title, album_title);

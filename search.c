@@ -8,13 +8,11 @@
 // fail fast. This value is the minimum number of bucket
 // matches that we require before giving a closer look
 // at a potential match
-#define MIN_BUCKET_MATCH_FOR_DEEP_CHECK 2
-
+#define MIN_BUCKET_MATCH_FOR_DEEP_CHECK 5
 
 // Once a pair of hashes has at least MIN_BUCKET_MATCH_FOR_DEEP_CHECK
 // bucket matches, we want a minimum score to retain this pair
-#define MIN_SCORE 60
-
+#define MIN_SCORE 50
 
 // Minimum number of full signature matches that an audio sample must have
 // with a given database entry to be retained
@@ -22,7 +20,9 @@
 
 // Minimum average score that an audio sample must have
 // with a given database entry to be retained
-#define MIN_AVERAGE_SCORE 30
+#define MIN_AVERAGE_SCORE 60
+
+enum { SEARCH_TO_MS = 15000 };
 
 float scores[100];
 int n_matches[100];
@@ -74,7 +74,13 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
     long qs_time = 0;
     long qs_cnt = 0;
 
+    long time_begin = time_in_milliseconds();
     for (unsigned int i = 0 ; i < sample->n_signatures ; i++) {
+        // IP
+        if (time_in_milliseconds() - time_begin > SEARCH_TO_MS) {
+    	    break;
+        }
+
         struct signature_list* list;
 
         int res = get_matches(lsh, sample->signatures[i].minhash, &list);
@@ -111,6 +117,14 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
                     if (score >= MIN_SCORE) {
                         scores[entry_index] += score;
                         n_matches[entry_index]++;
+                        // [IP]
+                        if (n_matches[entry_index] >= MIN_SIGNATURE_MATCHES && 
+                            ((scores[entry_index] / (float)n_matches[entry_index] >= MIN_AVERAGE_SCORE) )) {
+                            printf("qs_time %ld\n", qs_time);
+                            printf("qs_cnt %ld\n", qs_cnt);
+
+                            return entry_index; 
+			            }
                     }
                 }
                 n_identical_matches = 1;
@@ -118,6 +132,13 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
         }
     }
 
+    printf("qs_time %ld\n", qs_time);
+    printf("qs_cnt %ld\n", qs_cnt);
+
+    // [IP]
+    return NO_MATCH_FOUND;
+
+    /*
     int best_match = NO_MATCH_FOUND;
     int best_score = 0;
     for (unsigned int i = 0 ; i < database->n_entries ; i++) {
@@ -133,4 +154,5 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
     printf("qs_cnt %d\n", qs_cnt);
 
     return best_match;
+    */
 }
