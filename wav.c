@@ -353,6 +353,7 @@ int read_samples(struct wav_reader* reader, float* *samples) {
     int n_src_bytes_for_one_dest_sample = reader->wBlockAlign;
     uint8_t* src_samples = (uint8_t*)malloc(n_src_bytes_for_one_dest_sample);
     if (src_samples == NULL) {
+        free(samples_44100Hz);
         return DECODING_ERROR;
     }
     for (unsigned int i = 0 ; i < n_samples ; i++) {

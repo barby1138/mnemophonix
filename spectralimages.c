@@ -152,8 +152,8 @@ int build_spectral_images(float* samples, unsigned int n_samples, struct spectra
     //  0               32              64
     float* bins = (float*)malloc(n_frames * NUMBER_OF_BINS * sizeof(float));
     if (bins == NULL) {
-        free(images);
         free((*images)->images);
+        free(images);
         return MEMORY_ERROR;
     }
 
@@ -216,6 +216,8 @@ int build_spectral_images(float* samples, unsigned int n_samples, struct spectra
     for (unsigned int k = 0 ; k < n_spectral_image_threads ; k++) {
 	    pthread_join(thread[k], NULL);
     }
+
+    free(bins);
 
     return SUCCESS;
 }
