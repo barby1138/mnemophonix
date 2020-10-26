@@ -22,11 +22,15 @@
 // with a given database entry to be retained
 #define MIN_AVERAGE_SCORE 60
 
-enum { SEARCH_TO_MS = 15000 };
+enum {
+    SEARCH_TO_MS = 15000,
+    MAX_DB_ENTRIES = 10000,
+    MAX_MATCHES_CNT = 1000000
+};
 
-float scores[100];
-int n_matches[100];
-struct signature_list array[10000];
+float scores[MAX_DB_ENTRIES];
+int n_matches[MAX_DB_ENTRIES];
+struct signature_list array[MAX_MATCHES_CNT];
 
 static long time_in_milliseconds() {
     struct timeval tv;
@@ -84,6 +88,10 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
         struct signature_list* list;
 
         int res = get_matches(lsh, sample->signatures[i].minhash, &list);
+        if (res > MAX_MATCHES_CNT) {
+            printf("too many matches_cnt %ld\n", res);
+            return MEMORY_ERROR;
+        }
         if (res == MEMORY_ERROR) {
             return MEMORY_ERROR;
         }
@@ -96,8 +104,8 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
         }
 
         long before_qs = time_in_milliseconds();
-        //qsort(array, res, sizeof(struct signature_list), (int (*)(const void *, const void *)) compare);
-        sl_tim_sort(array, res);
+        qsort(array, res, sizeof(struct signature_list), (int (*)(const void *, const void *)) compare);
+        //sl_tim_sort(array, res);
         
         long after_qs = time_in_milliseconds();
         qs_time += (after_qs - before_qs);
@@ -117,6 +125,7 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
                     if (score >= MIN_SCORE) {
                         scores[entry_index] += score;
                         n_matches[entry_index]++;
+                        
                         // [IP]
                         if (n_matches[entry_index] >= MIN_SIGNATURE_MATCHES && 
                             ((scores[entry_index] / (float)n_matches[entry_index] >= MIN_AVERAGE_SCORE) )) {
@@ -125,6 +134,7 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
 
                             return entry_index; 
 			            }
+                        
                     }
                 }
                 n_identical_matches = 1;
@@ -132,21 +142,25 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
         }
     }
 
+    
     printf("qs_time %ld\n", qs_time);
     printf("qs_cnt %ld\n", qs_cnt);
 
     // [IP]
     return NO_MATCH_FOUND;
-
-    /*
+    
+/*    
     int best_match = NO_MATCH_FOUND;
     int best_score = 0;
     for (unsigned int i = 0 ; i < database->n_entries ; i++) {
         float average_score = scores[i] / (float)n_matches[i];
-        if (n_matches[i] >= MIN_SIGNATURE_MATCHES && average_score >= MIN_AVERAGE_SCORE)
-        if (average_score > best_score) {
-            best_score = average_score;
-            best_match = i;
+        if (n_matches[i] >= MIN_SIGNATURE_MATCHES && average_score >= MIN_AVERAGE_SCORE) {
+            printf("match >>>> i: %d\n", i);
+
+            if (average_score > best_score) {
+                best_score = average_score;
+                best_match = i;
+            }
         }
     }
 
@@ -154,5 +168,5 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
     printf("qs_cnt %d\n", qs_cnt);
 
     return best_match;
-    */
+*/
 }
