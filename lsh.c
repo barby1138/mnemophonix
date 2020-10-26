@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "lsh.h"
 
-
 void free_signature_list(struct signature_list* list) {
     struct signature_list* tmp;
     while (list != NULL) {
@@ -10,7 +9,6 @@ void free_signature_list(struct signature_list* list) {
         list = tmp;
     }
 }
-
 
 void free_hash_tables(struct lsh* tables) {
     for (unsigned int i = 0 ; i < N_BUCKETS ; i++) {
