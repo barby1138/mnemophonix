@@ -247,7 +247,7 @@ int main(int argc, char* argv[]) {
         printf("(lsh index building took %ld ms)\n", after_lsh - after_loading_db);
 
         int c = 0;
-        while(c < 100)
+        //while(c < 100)
         {
         printf("Searching...\n");
 
