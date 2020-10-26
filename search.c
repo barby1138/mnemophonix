@@ -102,6 +102,7 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
             array[j].entry_index = list->entry_index;
             array[j].signature_index = list->signature_index;
         }
+        free_signature_list(list);
 
         long before_qs = time_in_milliseconds();
         qsort(array, res, sizeof(struct signature_list), (int (*)(const void *, const void *)) compare);
@@ -131,6 +132,7 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
                             ((scores[entry_index] / (float)n_matches[entry_index] >= MIN_AVERAGE_SCORE) )) {
                             printf("qs_time %ld\n", qs_time);
                             printf("qs_cnt %ld\n", qs_cnt);
+                            printf("sig_matches %d avg_score  %ld %f\n", qs_cnt, scores[entry_index] / (float)n_matches[entry_index]);
 
                             return entry_index; 
 			            }
@@ -148,7 +150,6 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
 
     // [IP]
     return NO_MATCH_FOUND;
-    
 /*    
     int best_match = NO_MATCH_FOUND;
     int best_score = 0;
