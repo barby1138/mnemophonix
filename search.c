@@ -98,11 +98,12 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
 
         memset(array, 0, res * sizeof(struct signature_list));
 
+        struct signature_list* tmp = list;
         for (int j = 0 ; j < res ; j++, list = list->next) {
             array[j].entry_index = list->entry_index;
             array[j].signature_index = list->signature_index;
         }
-        free_signature_list(list);
+        free_signature_list(tmp);
 
         long before_qs = time_in_milliseconds();
         qsort(array, res, sizeof(struct signature_list), (int (*)(const void *, const void *)) compare);
