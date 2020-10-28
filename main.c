@@ -52,10 +52,10 @@ int main(int argc, char* argv[]) {
     }
     char* input = argv[2];
 
-    struct signatures* fingerprint;
-    char* artist;
-    char* track_title;
-    char* album_title;
+    struct signatures* fingerprint = NULL;
+    char* artist = NULL;
+    char* track_title = NULL;
+    char* album_title = NULL;
 
 /////////////////////
     if (!strcmp(argv[1], "daemon")) {

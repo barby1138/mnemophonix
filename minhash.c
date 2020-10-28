@@ -55,6 +55,7 @@ struct signatures* build_signatures(struct rawfingerprints* rawfingerprints) {
 
 
 void free_signatures(struct signatures* signatures) {
-    free(signatures->signatures);
+    if (NULL != signatures)
+        free(signatures->signatures);
     free(signatures);
 }
