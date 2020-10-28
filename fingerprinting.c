@@ -38,6 +38,7 @@ int generate_fingerprint(const char* wav, struct signatures* *fingerprint,
     float* samples;
     int n = read_samples(reader, &samples);
     free_wav_reader(reader);
+    
     fprintf(stderr, "%d 5512Hz mono samples\n", n);
     if (n < SAMPLES_PER_FRAME) {
         free(samples);
@@ -62,6 +63,7 @@ int generate_fingerprint(const char* wav, struct signatures* *fingerprint,
     fprintf(stderr, "Building raw fingerprints\n");
     struct rawfingerprints* rawfingerprints = build_raw_fingerprints(spectral_images);
     free_spectral_images(spectral_images);
+    
     if (rawfingerprints == NULL) {
         return MEMORY_ERROR;
     }
@@ -74,6 +76,7 @@ int generate_fingerprint(const char* wav, struct signatures* *fingerprint,
     fprintf(stderr, "Generated %d signatures\n", signatures->n_signatures);
 
     *fingerprint = signatures;
+    
     return SUCCESS;
 }
 

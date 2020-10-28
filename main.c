@@ -147,7 +147,9 @@ int main(int argc, char* argv[]) {
 				    if (res != SUCCESS) {
 					    write(cl, "ERROR\n", 6);
 					    free_signatures(fingerprint);
-					    free(artist); free(track_title); free(album_title);
+					    free(artist); 
+                        free(track_title); 
+                        free(album_title);
 					    write(cl,"READY\n", 6);
 					    continue;
 				    }
@@ -194,8 +196,12 @@ int main(int argc, char* argv[]) {
   	    return 0;
     }
 //////////////////////
-
-    int res = generate_fingerprint(input, &fingerprint, &artist, &track_title, &album_title);
+/*
+    int cc = 0;
+    while(cc < 10000)
+    {
+*/
+    int res = NOT_A_WAVE_FILE;//generate_fingerprint(input, &fingerprint, &artist, &track_title, &album_title);
     if (res != SUCCESS) {
         switch (res) {
             case CANNOT_READ_FILE: fprintf(stderr, "Cannot read file '%s'\n", input); return 1;
@@ -222,7 +228,14 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-
+/*
+    free_signatures(fingerprint);
+	free(artist); 
+    free(track_title); 
+    free(album_title);
+    cc++;
+    }
+*/
     int ret_value = 0;
 
     if (!strcmp(argv[1], "index")) {
@@ -247,7 +260,7 @@ int main(int argc, char* argv[]) {
         printf("(lsh index building took %ld ms)\n", after_lsh - after_loading_db);
 
         int c = 0;
-        //while(c < 100)
+        //while(c < 10000)
         {
         printf("Searching...\n");
 

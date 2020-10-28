@@ -106,8 +106,8 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
         free_signature_list(tmp);
 
         long before_qs = time_in_milliseconds();
-        qsort(array, res, sizeof(struct signature_list), (int (*)(const void *, const void *)) compare);
-        //sl_tim_sort(array, res);
+        //qsort(array, res, sizeof(struct signature_list), (int (*)(const void *, const void *)) compare);
+        sl_tim_sort(array, res);
         
         long after_qs = time_in_milliseconds();
         qs_time += (after_qs - before_qs);
