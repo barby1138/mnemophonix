@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	    int fd, cl, rc;
 	    struct sockaddr_un addr;
 	    char buf[100], msg[100];
-	    const char *socket_path = "/tmp/mnemophonix.sock";
+	    const char *socket_path = "/tmp/mnemo_tsis.sock";
 	
 	    if ( (fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
 		    perror("socket error");

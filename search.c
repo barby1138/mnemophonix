@@ -90,9 +90,11 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
         int res = get_matches(lsh, sample->signatures[i].minhash, &list);
         if (res > MAX_MATCHES_CNT) {
             printf("too many matches_cnt %ld\n", res);
+            free_signature_list(list);
             return MEMORY_ERROR;
         }
         if (res == MEMORY_ERROR) {
+            free_signature_list(list);
             return MEMORY_ERROR;
         }
 
