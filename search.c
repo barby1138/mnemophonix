@@ -135,7 +135,7 @@ int search(struct signatures* sample, struct index* database, struct lsh* lsh) {
                             ((scores[entry_index] / (float)n_matches[entry_index] >= MIN_AVERAGE_SCORE) )) {
                             printf("qs_time %ld\n", qs_time);
                             printf("qs_cnt %ld\n", qs_cnt);
-                            printf("sig_matches %d avg_score  %ld %f\n", qs_cnt, scores[entry_index] / (float)n_matches[entry_index]);
+                            printf("sig_matches %d avg_score  %f\n", n_matches[entry_index], scores[entry_index] / (float)n_matches[entry_index]);
 
                             return entry_index; 
 			            }
