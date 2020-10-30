@@ -1,9 +1,7 @@
 #include <math.h>
 #include "hannwindow.h"
 
-
 static float window[SAMPLES_PER_FRAME] = { 666 };
-
 
 static void initialize() {
     for (unsigned int i = 0 ; i < SAMPLES_PER_FRAME ; i++) {

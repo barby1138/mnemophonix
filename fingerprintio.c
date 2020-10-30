@@ -207,14 +207,17 @@ int read_index(const char* filename, struct index* *index) {
 
 
 static void free_index_entry(struct index_entry* entry) {
-    free(entry->filename);
-    free(entry->artist);
-    free(entry->track_title);
-    free(entry->album_title);
-    if (entry->signatures) {
-        free_signatures(entry->signatures);
+    if (entry) {
+        free(entry->filename);
+        free(entry->artist);
+        free(entry->track_title);
+        free(entry->album_title);
+        if (entry->signatures) {
+            free_signatures(entry->signatures);
+        }
+
+        free(entry);
     }
-    free(entry);
 }
 
 
@@ -222,6 +225,8 @@ void free_index(struct index* index) {
     for (unsigned int i = 0 ; i < index->n_entries ; i++) {
         free_index_entry(index->entries[i]);
     }
-    free(index->entries);
-    free(index);
+    if (index) {
+        free(index->entries);
+        free(index);
+    }
 }

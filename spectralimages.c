@@ -224,6 +224,8 @@ int build_spectral_images(float* samples, unsigned int n_samples, struct spectra
 
 
 void free_spectral_images(struct spectral_images* images) {
-    free(images->images);
-    free(images);
+    if(images) {
+        free(images->images);
+        free(images);
+    }
 }
