@@ -112,6 +112,11 @@ int main(int argc, char* argv[]) {
 		    write(cl,"READY\n", 6);
 
     		while ( (rc=read(cl,buf,sizeof(buf))) > 0) {
+                fingerprint = NULL;
+                artist = NULL;
+                track_title = NULL;
+                album_title = NULL;
+
       			printf("read %u bytes: %.*s\n", rc, rc, buf);
 			    buf[rc-1] = '\0';
 			    printf("trying file %s ...\n", buf);
